@@ -1,0 +1,3 @@
+class eventstore::config {
+  
+}
