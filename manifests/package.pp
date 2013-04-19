@@ -1,9 +1,9 @@
 class eventstore::package {
-  $dir = $eventstore::dir
+  $dir     = $eventstore::dir
   $version = $eventstore::version
-  $url = $eventstore::url
-  $ensure = $eventstore::ensure
-  
+  $url     = $eventstore::url
+  $ensure  = $eventstore::ensure
+
   if $ensure = 'present' {
     wget::fetch { 'download_eventstore':
       source      => "$url",
@@ -25,12 +25,12 @@ class eventstore::package {
     file {"/usr/local/src/eventstore-$version.tar.gz":
       ensure => absent,
     }
-    file { "/usr/local/src/eventstore-$version.tar.gz":
+    file { "/usr/local/src/eventstore-$version":
       ensure => absent,
+      force  => true,
     }
     file { $dir:
       ensure => absent,
     }
   }
-  
 }
