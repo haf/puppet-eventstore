@@ -12,10 +12,17 @@ class eventstore::config(
   $user        = $eventstore::user
   $group       = $eventstore::group
 
+  file { [$log_dir, $etc_dir]:
+    ensure => directory,
+    owner  => $user,
+    group  => $group,
+  }
+
   file { $config_file:
     ensure => $ensure,
     content => template('eventstore/config.json.erb'),
     owner   => $user,
     group   => $group,
+    require => File[$etc_dir],
   }
 }

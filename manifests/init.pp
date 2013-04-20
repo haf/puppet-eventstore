@@ -20,27 +20,29 @@ class eventstore(
   } ->
 
   svcutils::svcuser { $user:
-    home   => $dir,
-    group  => $group,
+    group   => $group,
     require => Anchor['eventstore::start'],
     before  => Anchor['eventstore::end'],
   } ->
 
   class { 'eventstore::package':
-    require => Anchor['eventstore::start'],
+    require => [
+      Anchor['eventstore::start'],
+      Class['mono'],
+    ],
     before  => Anchor['eventstore::end'],
   } ->
-  
+
   class { 'eventstore::config':
     require => Anchor['eventstore::start'],
     before  => Anchor['eventstore::end'],
   } ~>
-  
+
   class { 'eventstore::service':
     ensure => running,
     require => Anchor['eventstore::start'],
     before  => Anchor['eventstore::end'],
   }
-  
+
   anchor { 'eventstore::end': }
 }

@@ -11,14 +11,15 @@ class eventstore::service(
   $tcp_port  = $eventstore::config::tcp_port
   $http_port = $eventstore::config::http_port
 
-  if $ensure = 'running' {
+  if $ensure == 'running' {
     svcutils::mixsvc { 'eventstore':
+      home        => $data_dir,
       enable      => true,
       user        => $user,
       group       => $group,
       log_dir     => $log_dir,
-      exec        => "${dir}/EventStore.SingleNode.exe",
-      args        => "--db=$data_dir --logsdir=$log_dir --config=$etc_dir \
+      exec        => "/usr/local/bin/mono",
+      args        => "${dir}/EventStore.SingleNode.exe --db=$data_dir --logsdir=$log_dir --config=$etc_dir \
 --http-port=$http_port --tcp-port=$tcp_port --ip=$ip",
       description => 'EventStore SingleNode Server'
     }
