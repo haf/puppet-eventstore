@@ -6,7 +6,11 @@ class eventstore(
   $group    = $eventstore::params::group,
   $log_dir  = $eventstore::params::log_dir,
   $etc_dir  = $eventstore::params::etc_dir,
-  $data_dir = $eventstore::params::data_dir
+  $data_dir = $eventstore::params::data_dir,
+  $ip       = $eventstore::params::ip,
+  $http_port = $eventstore::params::http_port,
+  $tcp_port = $eventstore::params::tcp_port,
+  $stats_period_sec = $eventstore::params::stats_period_sec,
 ) inherits eventstore::params {
   $url    = "$eventstore::params::baseurl/eventstore-mono-$version.tgz"
 
@@ -34,8 +38,12 @@ class eventstore(
   } ->
 
   class { 'eventstore::config':
-    require => Anchor['eventstore::start'],
-    before  => Anchor['eventstore::end'],
+    ip        => $ip,
+    http_port => $http_port,
+    tcp_port  => $tcp_port,
+    stats_period_sec => $stats_period_sec,
+    require   => Anchor['eventstore::start'],
+    before    => Anchor['eventstore::end'],
   } ~>
 
   class { 'eventstore::service':

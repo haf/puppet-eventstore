@@ -7,4 +7,8 @@ class eventstore::params {
   $etc_dir   = '/etc/eventstore'
   $user      = 'eventstore'
   $group     = 'eventstore'
+  $ip        = '127.0.0.1'
+  $tcp_port  = 1113
+  $http_port = 2113
+  $stats_period_sec = 30
 }

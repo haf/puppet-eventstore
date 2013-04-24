@@ -1,9 +1,9 @@
 class eventstore::config(
   $ensure           = 'present',
-  $ip               = '127.0.0.1', # eventstore crashes when given IPv6 arg
-  $tcp_port         = 1113,
-  $http_port        = 2113,
-  $stats_period_sec = 30,
+  $ip, # eventstore crashes when given IPv6 arg
+  $tcp_port,
+  $http_port,
+  $stats_period_sec
 ) {
   $log_dir     = $eventstore::log_dir
   $etc_dir     = $eventstore::etc_dir
