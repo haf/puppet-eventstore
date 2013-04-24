@@ -3,7 +3,8 @@ class eventstore::config(
   $ip, # eventstore crashes when given IPv6 arg
   $tcp_port,
   $http_port,
-  $stats_period_sec
+  $stats_period_sec,
+  $prefixes
 ) {
   $log_dir     = $eventstore::log_dir
   $etc_dir     = $eventstore::etc_dir

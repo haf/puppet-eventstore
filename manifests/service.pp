@@ -10,6 +10,7 @@ class eventstore::service(
   $ip        = $eventstore::config::ip
   $tcp_port  = $eventstore::config::tcp_port
   $http_port = $eventstore::config::http_port
+  $prefixes  = $eventstore::config::prefixes
 
   if $ensure == 'running' {
     svcutils::mixsvc { 'eventstore':
@@ -19,8 +20,8 @@ class eventstore::service(
       group       => $group,
       log_dir     => $log_dir,
       exec        => "/usr/local/bin/mono",
-      args        => "${dir}/EventStore.SingleNode.exe --db=$data_dir --logsdir=$log_dir --config=$etc_dir \
---http-port=$http_port --tcp-port=$tcp_port --ip=$ip",
+      args        => "--gc=sgen ${dir}/EventStore.SingleNode.exe --run-projections --db=$data_dir --logsdir=$log_dir --config=$etc_dir \
+--http-port=$http_port --tcp-port=$tcp_port --ip=$ip --prefixes=$prefixes",
       description => 'EventStore SingleNode Server'
     }
   } else {

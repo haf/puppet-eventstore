@@ -11,4 +11,5 @@ class eventstore::params {
   $tcp_port  = 1113
   $http_port = 2113
   $stats_period_sec = 30
+  $prefixes  = 'http://*:2113/'
 }
