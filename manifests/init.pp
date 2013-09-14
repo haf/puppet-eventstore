@@ -12,7 +12,7 @@ class eventstore(
   $tcp_port         = $eventstore::params::tcp_port,
   $stats_period_sec = $eventstore::params::stats_period_sec,
   $prefixes         = $eventstore::params::prefixes,
-  $manage_firewall  = false
+  $manage_firewall  = hiera('manage_firewalls', false),
 ) inherits eventstore::params {
   $url    = "$eventstore::params::baseurl/eventstore-mono-$version.tgz"
 
