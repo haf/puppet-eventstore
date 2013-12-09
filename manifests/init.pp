@@ -15,6 +15,7 @@ class eventstore(
   $manage_firewall  = hiera('manage_firewalls', false),
 ) inherits eventstore::params {
   $url    = "$eventstore::params::baseurl/eventstore-mono-$version.tgz"
+  $home   = $dir
 
   anchor { 'eventstore::start': }
 
@@ -23,13 +24,31 @@ class eventstore(
     system  => true,
     require => Anchor['eventstore::start'],
     before  => Anchor['eventstore::end'],
-  } ->
+  }
 
-  svcutils::svcuser { $user:
-    group   => $group,
-    require => Anchor['eventstore::start'],
+  user { $user:
+    ensure  => $ensure,
+    gid     => $group,
+    home    => $home,
+    system  => true,
+    require => [
+      Anchor['eventstore::start'],
+      Group[$group]
+    ],
     before  => Anchor['eventstore::end'],
-  } ->
+  }
+
+  file { $home:
+    ensure  => directory,
+    owner   => $user,
+    group   => $group,
+    mode    => '0755',
+    require => [
+      Anchor['eventstore::start'],
+      User[$user]
+    ],
+    before  => Anchor['eventstore::end'],
+  }
 
   class { 'eventstore::package':
     require => [
@@ -40,13 +59,13 @@ class eventstore(
   } ->
 
   class { 'eventstore::config':
-    ip        => $ip,
-    http_port => $http_port,
-    tcp_port  => $tcp_port,
+    ip               => $ip,
+    http_port        => $http_port,
+    tcp_port         => $tcp_port,
     stats_period_sec => $stats_period_sec,
-    prefixes  => $prefixes,
-    require   => Anchor['eventstore::start'],
-    before    => Anchor['eventstore::end'],
+    prefixes         => $prefixes,
+    require          => Anchor['eventstore::start'],
+    before           => Anchor['eventstore::end'],
   } ~>
 
   class { 'eventstore::service':
