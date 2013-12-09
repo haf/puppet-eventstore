@@ -38,18 +38,6 @@ class eventstore(
     before  => Anchor['eventstore::end'],
   }
 
-  file { $home:
-    ensure  => directory,
-    owner   => $user,
-    group   => $group,
-    mode    => '0755',
-    require => [
-      Anchor['eventstore::start'],
-      User[$user]
-    ],
-    before  => Anchor['eventstore::end'],
-  }
-
   class { 'eventstore::package':
     require => [
       Anchor['eventstore::start'],
