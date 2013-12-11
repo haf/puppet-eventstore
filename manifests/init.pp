@@ -1,20 +1,21 @@
 class eventstore(
   $ensure           = 'present',
-  $version          = $eventstore::params::version,
-  $dir              = $eventstore::params::dir,
-  $user             = $eventstore::params::user,
-  $group            = $eventstore::params::group,
-  $log_dir          = $eventstore::params::log_dir,
-  $etc_dir          = $eventstore::params::etc_dir,
-  $data_dir         = $eventstore::params::data_dir,
-  $ip               = $eventstore::params::ip,
-  $http_port        = $eventstore::params::http_port,
-  $tcp_port         = $eventstore::params::tcp_port,
-  $stats_period_sec = $eventstore::params::stats_period_sec,
-  $prefixes         = $eventstore::params::prefixes,
-  $manage_firewall  = hiera('manage_firewalls', false),
-) inherits eventstore::params {
-  $url    = "$eventstore::params::baseurl/eventstore-mono-$version.tgz"
+  $version          = '2.0.1',
+  $dir              = '/opt/eventstore',
+  $log_dir          = '/var/log/eventstore',
+  $etc_dir          = '/etc/eventstore',
+  $data_dir         = '/var/lib/eventstore',
+  $user             = 'eventstore',
+  $group            = 'eventstore',
+  $ip               = '127.0.0.1',
+  $tcp_port         = 1113,
+  $http_port        = 2113,
+  $stats_period_sec = 30,
+  $prefixes         = 'http://*:2113/',
+  $use_pkg          = true,
+  $manage_firewall  = hiera('manage_firewall', false),
+) {
+  $url    = "http://download.geteventstore.com/binaries/eventstore-mono-$version.tgz"
   $home   = $dir
 
   anchor { 'eventstore::start': }
@@ -47,11 +48,6 @@ class eventstore(
   } ->
 
   class { 'eventstore::config':
-    ip               => $ip,
-    http_port        => $http_port,
-    tcp_port         => $tcp_port,
-    stats_period_sec => $stats_period_sec,
-    prefixes         => $prefixes,
     require          => Anchor['eventstore::start'],
     before           => Anchor['eventstore::end'],
   } ~>

@@ -15,6 +15,7 @@ class eventstore::service(
   file { $data_dir:
     ensure => directory,
     owner  => $user,
+    group  => $group,
   }
 
   if $ensure == 'running' {
