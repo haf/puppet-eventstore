@@ -12,6 +12,8 @@ class eventstore(
   $http_port        = 2113,
   $stats_period_sec = 30,
   $prefixes         = 'http://*:2113/',
+# undocumented flag from EventStore:
+#  $run_projections  = true,
   $use_pkg          = true,
   $manage_firewall  = hiera('manage_firewall', false),
 ) {
@@ -53,7 +55,6 @@ class eventstore(
   } ~>
 
   class { 'eventstore::service':
-    ensure => running,
     require => Anchor['eventstore::start'],
     before  => Anchor['eventstore::end'],
   }

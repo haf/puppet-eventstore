@@ -1,5 +1,5 @@
 class eventstore::service(
-  $ensure = 'running'
+  $ensure = 'present'
 ) {
   $user      = $eventstore::user
   $group     = $eventstore::group
@@ -18,13 +18,14 @@ class eventstore::service(
     group  => $group,
   }
 
-  if $ensure == 'running' {
+  if $ensure == 'present' {
     supervisor::service { 'eventstore':
+      ensure      => 'present',
       directory   => $data_dir,
       user        => $user,
       group       => $group,
-      command     => "/usr/local/bin/mono --gc=sgen ${dir}/EventStore.SingleNode.exe \
---run-projections --db=$data_dir --logsdir=$log_dir --config=$etc_dir \
+      command     => "/usr/bin/mono --gc=sgen ${dir}/EventStore.SingleNode.exe \
+--db=$data_dir --logsdir=$log_dir --config=$etc_dir \
 --http-port=$http_port --tcp-port=$tcp_port --ip=$ip --prefixes=$prefixes",
       require     => File[$data_dir],
     }
