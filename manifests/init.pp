@@ -14,19 +14,14 @@ class eventstore(
   $prefixes         = 'http://*:2113/',
 # undocumented flag from EventStore:
 #  $run_projections  = true,
-  $use_pkg          = true,
-  $manage_firewall  = hiera('manage_firewall', false),
+  $use_pkg          = true
 ) {
   $url    = "http://download.geteventstore.com/binaries/eventstore-mono-$version.tgz"
   $home   = $dir
 
-  anchor { 'eventstore::start': }
-
   group { $group:
     ensure  => present,
     system  => true,
-    require => Anchor['eventstore::start'],
-    before  => Anchor['eventstore::end'],
   }
 
   user { $user:
@@ -34,30 +29,16 @@ class eventstore(
     gid     => $group,
     home    => $home,
     system  => true,
-    require => [
-      Anchor['eventstore::start'],
-      Group[$group]
-    ],
-    before  => Anchor['eventstore::end'],
+    require => Group[$group]
   }
 
-  class { 'eventstore::package':
-    require => [
-      Anchor['eventstore::start'],
-      Class['mono'],
-    ],
-    before  => Anchor['eventstore::end'],
+  class { 'eventstore::package': 
+    require => Class['mono'],
   } ->
 
-  class { 'eventstore::config':
-    require          => Anchor['eventstore::start'],
-    before           => Anchor['eventstore::end'],
-  } ~>
+  class { 'eventstore::config': } ~>
 
-  class { 'eventstore::service':
-    require => Anchor['eventstore::start'],
-    before  => Anchor['eventstore::end'],
-  }
+  class { 'eventstore::service': }
 
-  anchor { 'eventstore::end': }
+  contain eventstore::service, eventstore::config, eventstore::package
 }

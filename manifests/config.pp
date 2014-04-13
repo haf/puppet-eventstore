@@ -31,19 +31,4 @@ class eventstore::config(
     group   => $group,
     require => File[$etc_dir],
   }
-
-  if $eventstore::manage_firewall {
-    firewall { "100 allow eventstore:$tcp_port":
-      proto  => 'tcp',
-      state  => ['NEW'],
-      dport  => $tcp_port,
-      action => 'accept',
-    }
-    firewall { "101 allow eventstore:$http_port":
-      proto  => 'tcp',
-      state  => ['NEW'],
-      dport  => $http_port,
-      action => 'accept',
-    }
-  }
 }
