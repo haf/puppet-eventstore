@@ -22,7 +22,6 @@ For all possible parameters, have a look at `class eventstore` [here](https://gi
 ## Try it Out!
 
 ```
-git clone https://github.com/haf/puppet-eventstore.git
-cd puppet-eventstore/vagrant
-cat README.md # follow!
+git clone https://github.com/haf/vagrant-eventstore.git
+./run.sh
 ```
