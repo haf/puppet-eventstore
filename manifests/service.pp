@@ -26,7 +26,8 @@ class eventstore::service(
       group       => $group,
       command     => "/usr/bin/mono --gc=sgen ${dir}/EventStore.SingleNode.exe \
 --db=$data_dir --logsdir=$log_dir --config=$etc_dir \
---http-port=$http_port --tcp-port=$tcp_port --ip=$ip --prefixes=$prefixes",
+--http-port=$http_port --tcp-port=$tcp_port --ip=$ip \
+--prefixes=$prefixes --run-projections=all",
       require     => File[$data_dir],
     }
   } else {
